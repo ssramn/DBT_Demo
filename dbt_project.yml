@@ -36,3 +36,70 @@ models:
     # Applies to all files under models/example/
     example:
       materialized: view
+models:
+  dbt_snow_pro:
+    +materialized: table
+    app:
+      +materialized: view
+      +schema:  app
+      +database: |
+        {%- if target.name == "default" -%} dbt_dev
+        {%- elif target.name == "dev" -%} dbt_dev
+        {%- elif target.name == "qa" -%} dbt_qa
+        {%- elif target.name == "prd" -%} dbt_prd
+        {%- else -%} invalid_target_name_please_check
+        {%- endif -%}
+
+    edw:
+      +materialized: table
+      +schema:  edw
+      +database: |
+        {%- if target.name == "default" -%} dbt_dev
+        {%- elif target.name == "dev" -%} dbt_dev
+        {%- elif target.name == "qa" -%} dbt_qa
+        {%- elif target.name == "prd" -%} dbt_prd
+        {%- else -%} invalid_target_name_please_check
+        {%- endif -%}
+
+    stg:
+      +materialized: table
+      +schema:  stg
+      +database: |
+        {%- if target.name == "default" -%} dbt_dev
+        {%- elif target.name == "dev" -%} dbt_dev
+        {%- elif target.name == "qa" -%} dbt_qa
+        {%- elif target.name == "prd" -%} dbt_prd
+        {%- else -%} invalid_target_name_please_check
+        {%- endif -%}
+
+    example:
+      +materialized: view
+      +schema:  stg
+      +database: |
+        {%- if target.name == "default" -%} dbt_dev
+        {%- elif target.name == "dev" -%} dbt_dev
+        {%- elif target.name == "qa" -%} dbt_qa
+        {%- elif target.name == "prd" -%} dbt_prd
+        {%- else -%} invalid_target_name_please_check
+        {%- endif -%}
+
+seeds:
+  +schema: src
+  +quote_columns: false
+  +database: |
+    {%- if target.name == "default" -%} dbt_pkumar
+    {%- elif target.name == "dev" -%} dbt_dev
+    {%- elif target.name == "qa" -%} dbt_qa
+    {%- elif target.name == "prd" -%} dbt_prd
+    {%- else -%} invalid_target_name_please_check
+    {%- endif -%}
+
+snapshots:
+  +target_schema: edw
+  +database: |
+    {%- if target.name == "default" -%} dbt_pkumar
+    {%- elif target.name == "dev" -%} dbt_dev
+    {%- elif target.name == "qa" -%} dbt_qa
+    {%- elif target.name == "prd" -%} dbt_prd
+    {%- else -%} invalid_target_name_please_check
+    {%- endif -%}
